@@ -1,6 +1,7 @@
 # Bloop Server for NodeJS
 
 [![Release](https://github.com/bloop-box/bloop-server-node/actions/workflows/release.yml/badge.svg)](https://github.com/bloop-box/bloop-server-node/actions/workflows/release.yml)
+[![codecov](https://codecov.io/gh/bloop-box/bloop-server-node/branch/main/graph/badge.svg?token=SFF7EKPZ2X)](https://codecov.io/gh/bloop-box/bloop-server-node)
 
 Server library implementing the Bloop Box protocol. This allows you to implement your own Bloop Server without having to
 worry about networking details.
