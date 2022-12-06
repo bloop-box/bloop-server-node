@@ -67,7 +67,24 @@ class MyProcessor implements Processor {
 }
 ```
 
-> **Note**: Then `authenticate` method can either be synchronous or marked `async` and return a promise.
+Instead of implementing the processor as a class. you can also implement it has a simple object with three arrow
+functions attached to it, using `Processor` as the object type:
+
+```typescript
+const myProcessor : Processor = {
+    authenticate: (clientId : string, secret : string) : boolean => {
+        // …
+    },
+    checkUid: async (clientId : string, uid : Buffer) : Promise<CheckUidResult> => {
+        // …
+    },
+    getAudio: async (id : Buffer) : Promise<GetAudioResult> => {
+        // …
+    },
+};
+```
+
+> **Note**: The `authenticate` method can either be synchronous or marked `async` and return a promise.
 
 ### Running the server
 
