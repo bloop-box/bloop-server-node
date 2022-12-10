@@ -53,7 +53,7 @@ export const startServer = async (options : ServerOptions) : Promise<StartServer
                 return;
             }
 
-            options.logger?.info(`Server started on ${address.toString()}`);
+            options.logger?.info('Server started on', address);
             resolve();
         });
     });
