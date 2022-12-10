@@ -95,7 +95,7 @@ have a valid SSL certificate. Then you can go ahead and start the server:
 import {startServer} from 'boop-server';
 
 const processor = new MyProcessor();
-const {server, closeOpenConnections} = startServer({
+const {server, closeOpenConnections} = await startServer({
     processor,
 
     tls: {
