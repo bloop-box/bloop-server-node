@@ -1,6 +1,6 @@
 {
   "name": "bloop-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Server library for the Bloop Box protocol",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

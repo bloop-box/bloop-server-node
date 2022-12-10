@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/bloop-box/bloop-server-node/compare/v1.0.2...v1.0.3) (2022-12-10)
+
+
+### Bug Fixes
+
+* properly format address in info ([056822f](https://github.com/bloop-box/bloop-server-node/commit/056822f24c5f59886c5d970ed41b286d669e6d73))
+
 ## [1.0.2](https://github.com/bloop-box/bloop-server-node/compare/v1.0.1...v1.0.2) (2022-12-10)
 
 
