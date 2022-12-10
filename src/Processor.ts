@@ -14,7 +14,7 @@ export class ValidUidResult {
     }
 }
 
-type CheckUidResult = UnknownUidResult | ThrottledUidResult | ValidUidResult;
+export type CheckUidResult = UnknownUidResult | ThrottledUidResult | ValidUidResult;
 
 export class AudioNotFoundResult {}
 export class AudioFoundResult {
@@ -22,7 +22,7 @@ export class AudioFoundResult {
     }
 }
 
-type GetAudioResult = AudioNotFoundResult | AudioFoundResult;
+export type GetAudioResult = AudioNotFoundResult | AudioFoundResult;
 
 type Processor = {
     authenticate : (clientId : string, secret : string) => Promise<boolean> | boolean;
