@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/bloop-box/bloop-server-node/compare/v1.0.3...v1.1.0) (2022-12-11)
+
+
+### Features
+
+* add auth and idle timeouts ([fae97d9](https://github.com/bloop-box/bloop-server-node/commit/fae97d9db1773a2d0f92c513ba917ec8b70e4460))
+
 ## [1.0.3](https://github.com/bloop-box/bloop-server-node/compare/v1.0.2...v1.0.3) (2022-12-10)
 
 
