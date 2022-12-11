@@ -16,9 +16,17 @@ type Tester = (socket : Stream) => Promise<void>;
 
 const startServerResults = new Set<StartServerResult>();
 
-export const testServer = async (processor : Partial<Processor>, tester : Tester, autoAuth = true) : Promise<void> => {
+export const testServer = async (
+    processor : Partial<Processor>,
+    tester : Tester,
+    autoAuth = true,
+    authTimeout ?: number,
+    idleTimeout ?: number,
+) : Promise<void> => {
     const startServerResult = await startServer({
         tls: tlsOptions,
+        authTimeout,
+        idleTimeout,
         processor: {
             authenticate: processor.authenticate ?? (() => true),
             checkUid: processor.checkUid

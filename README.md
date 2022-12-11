@@ -118,6 +118,12 @@ const {server, closeOpenConnections} = await startServer({
     //    format: winston.format.simple(),
     //    transports: new winston.transport.Console(),
     //}),
+    
+    // Authentication timeout, defaults to 1 second.
+    //authTimeout: 1_000,
+
+    // Idle timeout, defaults to 30 second.
+    //idleTimeout: 30_000,
 });
 
 // This takes care of gracefully shutting down the server on CTRL+C

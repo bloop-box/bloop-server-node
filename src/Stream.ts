@@ -9,6 +9,7 @@ type Stream = {
     writeAll : (buffer : Buffer) => void;
     close : () => void;
     isClosed : () => boolean;
+    setTimeout : (timeout : number, callback : () => void) => void;
 };
 
 export default Stream;

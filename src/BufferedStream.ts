@@ -41,6 +41,11 @@ class BufferedStream<T extends Socket> implements Stream {
 
     public async readExact(length : number) : Promise<Buffer> {
         /* istanbul ignore next */
+        if (this.closed) {
+            throw new StreamClosedError('Socket was closed');
+        }
+
+        /* istanbul ignore next */
         if (this.readResolver) {
             throw new Error('Only one read can be performed at a time');
         }
@@ -98,16 +103,20 @@ class BufferedStream<T extends Socket> implements Stream {
     public writeUint8(value : number) : void {
         const content = Buffer.allocUnsafe(1);
         content.writeUInt8(value, 0);
-        this.socket.write(content);
+        this.writeAll(content);
     }
 
     public writeUInt32LE(value : number) : void {
         const content = Buffer.allocUnsafe(4);
         content.writeUInt32LE(value, 0);
-        this.socket.write(content);
+        this.writeAll(content);
     }
 
     public writeAll(buffer : Buffer) : void {
+        if (this.closed) {
+            throw new StreamClosedError('Socket was closed');
+        }
+
         this.socket.write(buffer);
     }
 
@@ -118,6 +127,10 @@ class BufferedStream<T extends Socket> implements Stream {
 
     public isClosed() : boolean {
         return this.closed;
+    }
+
+    public setTimeout(timeout : number, callback : () => void) : void {
+        this.socket.setTimeout(timeout, callback);
     }
 }
 

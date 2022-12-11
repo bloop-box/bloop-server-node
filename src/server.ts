@@ -11,6 +11,8 @@ export type ServerOptions = {
     tls : TlsOptions;
     port ?: number;
     hostname ?: string;
+    authTimeout ?: number;
+    idleTimeout ?: number;
     processor : Processor;
     logger ?: Logger;
 };
@@ -27,7 +29,7 @@ export const startServer = async (options : ServerOptions) : Promise<StartServer
         const stream = new BufferedStream(socket);
         streams.add(stream);
 
-        handleClient(stream, options.processor, options.logger)
+        handleClient(stream, options.processor, options.logger, options.authTimeout, options.idleTimeout)
             .then(() => {
                 stream.close();
                 streams.delete(stream);

@@ -20,26 +20,59 @@ export enum Response {
     pong = 0,
 }
 
-const handleClient = async (stream : Stream, processor : Processor, logger ?: Logger) : Promise<void> => {
-    const credentialsLength = await stream.readUint8();
-    const credentials = (await stream.readExact(credentialsLength)).toString('ascii');
+const handleClient = async (
+    stream : Stream,
+    processor : Processor,
+    logger ?: Logger,
+    authTimeout = 1_000,
+    idleTimeout = 30_000,
+) : Promise<void> => {
+    // We handle the auth timeout via race instead of a socket timeout. This forces the client to complete
+    // authentication in a fixed amount of time. Otherwise, a malicious client could send individual bytes to keep the
+    // connection open for up 256 times the socket timeout.
+    let timeout;
 
-    if (!credentials.includes(':')) {
-        logger?.info('Malformed credentials');
-        stream.writeUint8(Response.invalidAuth);
+    const clientId = await Promise.race([
+        new Promise<null>(resolve => {
+            timeout = setTimeout(() => {
+                resolve(null);
+            }, authTimeout);
+        }),
+        (async () => {
+            const credentialsLength = await stream.readUint8();
+            const credentials = (await stream.readExact(credentialsLength)).toString('ascii');
+
+            if (!credentials.includes(':')) {
+                logger?.info('Malformed credentials');
+                stream.writeUint8(Response.invalidAuth);
+                return null;
+            }
+
+            const [clientId, secret] = credentials.split(':', 2);
+            const authResult = await processor.authenticate(clientId, secret);
+
+            if (!authResult) {
+                logger?.info(`Unknown client ID "${clientId}" or invalid secret`);
+                stream.writeUint8(Response.invalidAuth);
+                return null;
+            }
+
+            stream.writeUint8(Response.validAuth);
+            return clientId;
+        })(),
+    ]);
+
+    clearTimeout(timeout);
+
+    if (!clientId) {
         return;
     }
 
-    const [clientId, secret] = credentials.split(':', 2);
-    const authResult = await processor.authenticate(clientId, secret);
-
-    if (!authResult) {
-        logger?.info(`Unknown client ID "${clientId}" or invalid secret`);
-        stream.writeUint8(Response.invalidAuth);
-        return;
-    }
-
-    stream.writeUint8(Response.validAuth);
+    // At this point we can be certain that it's not a random client anymore, so further inactivity is handled via
+    // socket timeouts.
+    stream.setTimeout(idleTimeout, () => {
+        stream.close();
+    });
 
     while (!stream.isClosed()) {
         const commandCode = await stream.readUint8();
