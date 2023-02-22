@@ -20,6 +20,15 @@ class BufferedStream<T extends Socket> implements Stream {
             }
         });
 
+        /* istanbul ignore next */
+        socket.on('error', () => {
+            if (this.readResolver) {
+                this.readResolver[2](new StreamClosedError('Socket encountered an error'));
+            }
+
+            this.closed = true;
+        });
+
         socket.on('close', () => {
             if (this.readResolver) {
                 this.readResolver[2](new StreamClosedError('Socket was closed'));
