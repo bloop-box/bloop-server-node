@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/bloop-box/bloop-server-node/compare/v1.1.0...v1.1.1) (2023-02-22)
+
+
+### Bug Fixes
+
+* **BufferedStream:** handle socket errors by closing the stream ([9750748](https://github.com/bloop-box/bloop-server-node/commit/97507486e9605122409a3f7438372b69d836d5ed))
+
 # [1.1.0](https://github.com/bloop-box/bloop-server-node/compare/v1.0.3...v1.1.0) (2022-12-11)
 
 
