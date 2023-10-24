@@ -17,6 +17,8 @@ In order to use the server, you have to implement a processor first. Following i
 you started:
 
 ```typescript
+import {randomUUID} from 'crypto';
+import uuidBuffer from 'uuid-buffer';
 import {
     AudioFoundResult,
     AudioNotFoundResult,
@@ -46,8 +48,8 @@ class MyProcessor implements Processor {
         if (hexUid === '00000000000002') {
             // This is a valid UID, return an array of achievement IDs, if any were achieved.
             return new ValidUidResult([
-                Buffer.from('0000000000000000000000000000000000000001'),
-                Buffer.from('0000000000000000000000000000000000000002'),
+                uuidBuffer.toBuffer(randomUUID()),
+                uuidBuffer.toBuffer(randomUUID()),
             ]);
         }
 

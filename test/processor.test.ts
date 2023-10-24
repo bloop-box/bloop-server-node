@@ -14,6 +14,6 @@ describe('Processor', () => {
 
         expect(() => {
             new ValidUidResult([id]);
-        }).toThrow('Length of achievement ID "000000000000000000000000000000000000000000" is not 20 bytes');
+        }).toThrow('Length of achievement ID "000000000000000000000000000000000000000000" is not 16 bytes');
     });
 });

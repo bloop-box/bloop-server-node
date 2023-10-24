@@ -34,8 +34,8 @@ describe('CheckUid', () => {
             checkUid: async (clientId, uid) => {
                 result = {clientId, uid};
                 return Promise.resolve(new ValidUidResult([
-                    Buffer.from('0'.repeat(40), 'hex'),
-                    Buffer.from('1'.repeat(40), 'hex'),
+                    Buffer.from('0'.repeat(32), 'hex'),
+                    Buffer.from('1'.repeat(32), 'hex'),
                 ]));
             },
         }, async stream => {
@@ -48,11 +48,11 @@ describe('CheckUid', () => {
             const numAchievements = await stream.readUint8();
             expect(numAchievements).toBe(2);
 
-            const firstAchievement = await stream.readExact(20);
-            const secondAchievement = await stream.readExact(20);
+            const firstAchievement = await stream.readExact(16);
+            const secondAchievement = await stream.readExact(16);
 
-            expect(firstAchievement).toEqual(Buffer.from('0'.repeat(40), 'hex'));
-            expect(secondAchievement).toEqual(Buffer.from('1'.repeat(40), 'hex'));
+            expect(firstAchievement).toEqual(Buffer.from('0'.repeat(32), 'hex'));
+            expect(secondAchievement).toEqual(Buffer.from('1'.repeat(32), 'hex'));
         });
 
         expect(result).toEqual({clientId: 'foo', uid: Buffer.from('0'.repeat(14), 'hex')});

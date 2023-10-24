@@ -1,6 +1,6 @@
 import type {TLSSocket} from 'tls';
 import type BufferedStream from '../src/BufferedStream';
-import {AuthResponse} from '../src/client.js';
+import {AuthResponse} from '../src/client';
 import {testServer} from './server-tester';
 
 describe('Authenticate', () => {

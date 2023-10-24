@@ -9,8 +9,8 @@ export class ValidUidResult {
         }
 
         for (const achievementId of achievementIds) {
-            if (achievementId.length !== 20) {
-                throw new Error(`Length of achievement ID "${achievementId.toString('hex')}" is not 20 bytes`);
+            if (achievementId.length !== 16) {
+                throw new Error(`Length of achievement ID "${achievementId.toString('hex')}" is not 16 bytes`);
             }
         }
     }
