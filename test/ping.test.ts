@@ -1,4 +1,4 @@
-import {Command, Response} from '../src/client';
+import {Command, PingResponse} from '../src/client';
 import {testServer} from './server-tester';
 
 describe('Ping', () => {
@@ -7,7 +7,7 @@ describe('Ping', () => {
             stream.writeUint8(Command.ping);
 
             const response = await stream.readUint8();
-            expect(response).toBe(Response.pong);
+            expect(response).toBe(PingResponse.pong);
         });
     });
 });

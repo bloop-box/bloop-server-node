@@ -1,4 +1,6 @@
 import type {Logger} from 'winston';
+import {IpV4Addr, IpV6Addr} from './ip-addr';
+import type {IpAddr} from './ip-addr';
 import type Processor from './Processor';
 import {AudioNotFoundResult, ThrottledUidResult, UnknownUidResult} from './Processor';
 import type Stream from './Stream';
@@ -7,16 +9,26 @@ export enum Command {
     checkUid = 0,
     getAudio = 1,
     ping = 2,
+    quit = 3,
 }
 
-export enum Response {
+export enum AuthResponse {
     invalidAuth = 0,
     validAuth = 1,
+}
+
+export enum CheckUidResponse {
     unknownUid = 0,
     throttledUid = 2,
     validUid = 1,
+}
+
+export enum GetAudioResponse {
     audioNotFound = 0,
     audioFound = 1,
+}
+
+export enum PingResponse {
     pong = 0,
 }
 
@@ -39,25 +51,39 @@ const handleClient = async (
             }, authTimeout);
         }),
         (async () => {
-            const credentialsLength = await stream.readUint8();
-            const credentials = (await stream.readExact(credentialsLength)).toString('ascii');
+            const clientIdLength = await stream.readUint8();
+            const clientId = (await stream.readExact(clientIdLength)).toString('utf-8');
 
-            if (!credentials.includes(':')) {
-                logger?.info('Malformed credentials');
-                stream.writeUint8(Response.invalidAuth);
-                return null;
+            const secretLength = await stream.readUint8();
+            const secret = (await stream.readExact(secretLength)).toString('utf-8');
+
+            const inetVersion = await stream.readUint8();
+            let localIp : IpAddr;
+
+            switch (inetVersion) {
+                case 4:
+                    localIp = new IpV4Addr(await stream.readExact(4));
+                    break;
+
+                case 6:
+                    localIp = new IpV6Addr(await stream.readExact(16));
+                    break;
+
+                default:
+                    logger?.info(`Invalid INET version "${inetVersion}"`);
+                    stream.writeUint8(AuthResponse.invalidAuth);
+                    return null;
             }
 
-            const [clientId, secret] = credentials.split(':', 2);
-            const authResult = await processor.authenticate(clientId, secret);
+            const authResult = await processor.authenticate(clientId, secret, localIp);
 
             if (!authResult) {
                 logger?.info(`Unknown client ID "${clientId}" or invalid secret`);
-                stream.writeUint8(Response.invalidAuth);
+                stream.writeUint8(AuthResponse.invalidAuth);
                 return null;
             }
 
-            stream.writeUint8(Response.validAuth);
+            stream.writeUint8(AuthResponse.validAuth);
             return clientId;
         })(),
     ]);
@@ -83,16 +109,16 @@ const handleClient = async (
                 const response = await processor.checkUid(clientId, uid);
 
                 if (response instanceof UnknownUidResult) {
-                    stream.writeUint8(Response.unknownUid);
+                    stream.writeUint8(CheckUidResponse.unknownUid);
                     break;
                 }
 
                 if (response instanceof ThrottledUidResult) {
-                    stream.writeUint8(Response.throttledUid);
+                    stream.writeUint8(CheckUidResponse.throttledUid);
                     break;
                 }
 
-                stream.writeUint8(Response.validUid);
+                stream.writeUint8(CheckUidResponse.validUid);
                 stream.writeUint8(response.achievementIds.length);
 
                 for (const achievementId of response.achievementIds) {
@@ -107,19 +133,22 @@ const handleClient = async (
                 const result = await processor.getAudio(id);
 
                 if (result instanceof AudioNotFoundResult) {
-                    stream.writeUint8(Response.audioNotFound);
+                    stream.writeUint8(GetAudioResponse.audioNotFound);
                     break;
                 }
 
-                stream.writeUint8(Response.audioFound);
+                stream.writeUint8(GetAudioResponse.audioFound);
                 stream.writeUInt32LE(result.data.length);
                 stream.writeAll(result.data);
                 break;
             }
 
             case Command.ping:
-                stream.writeUint8(Response.pong);
+                stream.writeUint8(PingResponse.pong);
                 break;
+
+            case Command.quit:
+                return;
 
             default:
                 logger?.info(`Unknown command: ${commandCode}`);

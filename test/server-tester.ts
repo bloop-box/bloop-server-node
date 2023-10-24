@@ -4,6 +4,7 @@ import {connect} from 'tls';
 import type {StartServerResult} from '../src';
 import {AudioNotFoundResult, startServer, UnknownUidResult} from '../src';
 import BufferedStream from '../src/BufferedStream';
+import {Command} from '../src/client';
 import type Processor from '../src/Processor';
 import type Stream from '../src/Stream';
 
@@ -59,8 +60,13 @@ export const testServer = async (
         const stream = new BufferedStream(socket);
 
         if (autoAuth) {
-            stream.writeUint8(7);
-            stream.writeAll(Buffer.from('foo:bar', 'ascii'));
+            stream.writeUint8(3);
+            stream.writeAll(Buffer.from('foo', 'utf-8'));
+            stream.writeUint8(3);
+            stream.writeAll(Buffer.from('bar', 'utf-8'));
+            stream.writeUint8(4);
+            stream.writeAll(Buffer.from([192, 168, 0, 1]));
+
             const authResult = await stream.readUint8();
             expect(authResult).toBe(1);
         }
@@ -68,6 +74,7 @@ export const testServer = async (
         try {
             await tester(stream);
         } finally {
+            stream.writeUint8(Command.quit);
             stream.close();
         }
     } finally {
@@ -82,7 +89,7 @@ export const testServer = async (
 
 export const closeOpenServer = async () : Promise<void> => {
     /* istanbul ignore next */
-    for (const startServerResult of startServerResults.values()) {
+    for (const startServerResult of startServerResults) {
         startServerResult.closeOpenConnections();
 
         await new Promise<void>(resolve => startServerResult.server.close(() => {

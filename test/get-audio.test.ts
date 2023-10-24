@@ -1,5 +1,5 @@
 import {AudioFoundResult, AudioNotFoundResult} from '../src';
-import {Command, Response} from '../src/client';
+import {Command, GetAudioResponse} from '../src/client';
 import {testServer} from './server-tester';
 
 describe('GetAudio', () => {
@@ -11,7 +11,7 @@ describe('GetAudio', () => {
             stream.writeAll(Buffer.from('0'.repeat(40), 'hex'));
 
             const response = await stream.readUint8();
-            expect(response).toBe(Response.audioNotFound);
+            expect(response).toBe(GetAudioResponse.audioNotFound);
         });
     });
 
@@ -28,7 +28,7 @@ describe('GetAudio', () => {
             stream.writeAll(Buffer.from('0'.repeat(40), 'hex'));
 
             const response = await stream.readUint8();
-            expect(response).toBe(Response.audioFound);
+            expect(response).toBe(GetAudioResponse.audioFound);
 
             const length = await stream.readUInt32LE();
             expect(length).toBe(6);

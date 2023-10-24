@@ -8,7 +8,7 @@ export default {
         {file: pkg.module, format: 'es', sourcemap: true},
     ],
     plugins: [
-        typescript({tsconfig: './tsconfig.json'}),
+        typescript({tsconfig: './tsconfig.build.json'}),
     ],
     external: ['tls'],
 };

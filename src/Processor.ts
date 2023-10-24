@@ -1,3 +1,5 @@
+import type {IpAddr} from './ip-addr';
+
 export class UnknownUidResult {}
 export class ThrottledUidResult {}
 export class ValidUidResult {
@@ -25,7 +27,7 @@ export class AudioFoundResult {
 export type GetAudioResult = AudioNotFoundResult | AudioFoundResult;
 
 type Processor = {
-    authenticate : (clientId : string, secret : string) => Promise<boolean> | boolean;
+    authenticate : (clientId : string, secret : string, localIp : IpAddr) => Promise<boolean> | boolean;
     checkUid : (clientId : string, uid : Buffer) => Promise<CheckUidResult>;
     getAudio : (id : Buffer) => Promise<GetAudioResult>;
 };

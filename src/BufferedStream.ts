@@ -100,7 +100,7 @@ class BufferedStream<T extends Socket> implements Stream {
                 this.queue.shift();
             } else {
                 this.queue[0].copy(result, offset, 0, length);
-                this.queue[0] = this.queue[0].slice(length);
+                this.queue[0] = this.queue[0].subarray(length);
             }
 
             length -= bufferLength;

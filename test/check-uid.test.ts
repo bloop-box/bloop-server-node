@@ -1,5 +1,5 @@
 import {ThrottledUidResult, ValidUidResult, UnknownUidResult} from '../src';
-import {Command, Response} from '../src/client';
+import {CheckUidResponse, Command} from '../src/client';
 import {testServer} from './server-tester';
 
 describe('CheckUid', () => {
@@ -11,7 +11,7 @@ describe('CheckUid', () => {
             stream.writeAll(Buffer.from('0'.repeat(14), 'hex'));
 
             const response = await stream.readUint8();
-            expect(response).toBe(Response.unknownUid);
+            expect(response).toBe(CheckUidResponse.unknownUid);
         });
     });
 
@@ -23,7 +23,7 @@ describe('CheckUid', () => {
             stream.writeAll(Buffer.from('0'.repeat(14), 'hex'));
 
             const response = await stream.readUint8();
-            expect(response).toBe(Response.throttledUid);
+            expect(response).toBe(CheckUidResponse.throttledUid);
         });
     });
 
@@ -43,7 +43,7 @@ describe('CheckUid', () => {
             stream.writeAll(Buffer.from('0'.repeat(14), 'hex'));
 
             const response = await stream.readUint8();
-            expect(response).toBe(Response.validUid);
+            expect(response).toBe(CheckUidResponse.validUid);
 
             const numAchievements = await stream.readUint8();
             expect(numAchievements).toBe(2);
