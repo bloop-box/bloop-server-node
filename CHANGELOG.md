@@ -1,3 +1,21 @@
+# [2.0.0](https://github.com/bloop-box/bloop-server-node/compare/v1.1.1...v2.0.0) (2023-10-24)
+
+
+### Bug Fixes
+
+* **Processor:** make sure to only accept 16 byte UUIDs ([357995e](https://github.com/bloop-box/bloop-server-node/commit/357995ee91cdb23743b7d8ad9a8ff62892604f02))
+
+
+### Features
+
+* implement bloop version 4 protocol ([725ff00](https://github.com/bloop-box/bloop-server-node/commit/725ff007b24b80437ed1a925fc0c7274c2a09a5f))
+
+
+### BREAKING CHANGES
+
+* This will require a client implementing version 4 of the bloop
+protocol.
+
 ## [1.1.1](https://github.com/bloop-box/bloop-server-node/compare/v1.1.0...v1.1.1) (2023-02-22)
 
 
