@@ -129,7 +129,7 @@ const handleClient = async (
             }
 
             case Command.getAudio: {
-                const id = (await stream.readExact(20));
+                const id = (await stream.readExact(16));
                 const result = await processor.getAudio(id);
 
                 if (result instanceof AudioNotFoundResult) {

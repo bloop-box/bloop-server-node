@@ -8,7 +8,7 @@ describe('GetAudio', () => {
             getAudio: async () => Promise.resolve(new AudioNotFoundResult()),
         }, async stream => {
             stream.writeUint8(Command.getAudio);
-            stream.writeAll(Buffer.from('0'.repeat(40), 'hex'));
+            stream.writeAll(Buffer.from('0'.repeat(32), 'hex'));
 
             const response = await stream.readUint8();
             expect(response).toBe(GetAudioResponse.audioNotFound);
@@ -25,7 +25,7 @@ describe('GetAudio', () => {
             },
         }, async stream => {
             stream.writeUint8(Command.getAudio);
-            stream.writeAll(Buffer.from('0'.repeat(40), 'hex'));
+            stream.writeAll(Buffer.from('0'.repeat(32), 'hex'));
 
             const response = await stream.readUint8();
             expect(response).toBe(GetAudioResponse.audioFound);
@@ -37,6 +37,6 @@ describe('GetAudio', () => {
             expect(data).toEqual(Buffer.from('foobar', 'ascii'));
         });
 
-        expect(result).toEqual({id: Buffer.from('0'.repeat(40), 'hex')});
+        expect(result).toEqual({id: Buffer.from('0'.repeat(32), 'hex')});
     });
 });
