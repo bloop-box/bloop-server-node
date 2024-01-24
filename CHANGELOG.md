@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/bloop-box/bloop-server-node/compare/v2.0.0...v2.0.1) (2024-01-24)
+
+
+### Bug Fixes
+
+* **client:** accept 16 byte achievement IDs instead of 20 byte ([884637e](https://github.com/bloop-box/bloop-server-node/commit/884637e4312064621deea467c08698a923b5d617))
+
 # [2.0.0](https://github.com/bloop-box/bloop-server-node/compare/v1.1.1...v2.0.0) (2023-10-24)
 
 
